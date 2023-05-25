@@ -1,11 +1,15 @@
 #!/bin/bash
+echo "Копирование UID пропуска из 4 байт"
 echo -n "Владелец пропуска: "
 read -r filename
 if [ -s "./$filename.uid" ]; then
-	uid=`cat $filename.uid | tr -d [:space:]`
+	echo "Пропуск найден в базе"
+	uid=`cat ./$filename.uid | tr -d [:space:]`
 else
+	echo "Поднесите оригинал и нажмите ENTER"
+	read
 	uid=`nfc-list | grep -m 1 "(NFCID1)" | cut -d ":" -f 2 | tr -d [:space:]`
-	echo -n $uid > ./$filename.uid
+	if [ -n "$uid" ]; then echo -n $uid > ./$filename.uid ; fi
 fi
 if [ -n "$uid" ]; then 
 	echo "Номер пропуска: $uid"
